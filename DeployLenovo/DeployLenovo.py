@@ -2,8 +2,8 @@
 '''
 Date         : 2020-09-16 20:15:27
 LastEditors  : LiZhenglin
-LastEditTime : 2020-10-20 21:03:17
-FilePath     : /python-tools/DeployLenovo.py/DeployLenovo.py
+LastEditTime : 2020-10-28 09:16:15
+FilePath     : \python-tool\DeployLenovo\DeployLenovo.py
 '''
 
 from time import time, sleep
@@ -71,7 +71,9 @@ class DeployLenovo(ShellHandler):
         if success_flag:
             print('%s SUCCESS!' % out)
         else:
+            print('!'*100)
             print('%s FAILED, please retry, if failed in several times, contact LiZhenglin or LiHuan to Deploy manually!' % out)
+            print('!'*100)
             self.removeLock()
             exitWithPress()
 
@@ -94,7 +96,9 @@ class DeployLenovo(ShellHandler):
         if not appear_flag:
             print('%s SUCCESS!' % out)
         else:
+            print('!'*100)
             print('%s FAILED, please retry, if failed in several times, contact LiZhenglin or LiHuan to Deploy manually!' % out)
+            print('!'*100)
             self.removeLock()
             exitWithPress()
 
@@ -110,8 +114,9 @@ class DeployLenovo(ShellHandler):
             _, stdout2, _ = self.executeCmd(
                 'cat /root/LenovoBackDemo/target/nohup.out')
             if list2string(stdout1) == list2string(stdout2):
-                print(
-                    'Deploy failed, please retry!')
+                print('!'*100)
+                print('Deploy failed, please retry!')
+                print('!'*100)
                 self.removeLock()
                 exitWithPress()
         return success_flag
@@ -130,7 +135,7 @@ class DeployLenovo(ShellHandler):
         self.execCmdGetExpect('mvn clean package',
                               'BUILD SUCCESS', 'Build project')
         # kill java process
-        self.executeCmd("""ps -aux | grep "java -Dfile.encoding=utf-8 -jar lenovo-back-1.0.0-SNAPSHOT.jar" | grep Sl | awk '{print $2}' | xargs kill""")
+        self.executeCmd("""ps -aux | grep "java -Dfile.encoding=utf-8 -jar lenovo-back-1.0.0-SNAPSHOT.jar" | grep -v grep | awk '{print $2}' | xargs kill""")
         sleep(3)
         self.execCmdGetExpect('pgrep java', [[], 'For more details see kill(1).'], "Kill java process")
         # enter folder target
